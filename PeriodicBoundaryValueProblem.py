@@ -2,7 +2,7 @@ import PeriodicBoundaryValueProblemMisc as misc
 import matplotlib.pyplot as plt
 import numpy
 import math
-
+import datetime
 
 h = 0.005
 N = int(1 / h)
@@ -29,13 +29,13 @@ for i in range(0, matrix.__len__()):
     matrix[i][i] = misc.b(i, h)
 
 for i in range(0, matrix.__len__() - 1):
-    matrix[i][i+1] = 1
+    matrix[i][i + 1] = 1
 
 for i in range(1, matrix.__len__()):
-    matrix[i][i-1] = 1
+    matrix[i][i - 1] = 1
 
-matrix[0][N-1] = 1
-matrix[N-1][0] = 1
+matrix[0][N - 1] = 1
+matrix[N - 1][0] = 1
 
 f = numpy.array(f)
 
@@ -56,48 +56,49 @@ for i in range(0, N - 1):
 
 column_G = [0.0] * (N - 1)
 column_G[0] = -1
-column_G[N-2] = -1
+column_G[N - 2] = -1
 column_F = numpy.array(column_F)
 column_G = numpy.array(column_G)
 
-x_1 = misc.solveTriMatrix(matrix_B, math.pow(h, 2) * column_F)
+my_pre_solution = [0.0] * (N - 1)
+d_time = datetime.datetime.now()
+y_1 = misc.solveTriMatrix(matrix_B, math.pow(h, 2) * column_F)
+y_2 = misc.solveTriMatrix(matrix_B, column_G)
+x_N_1 = (misc.f(1) * math.pow(h, 2) - y_1[0] - y_1[N - 2]) / (matrix[N - 1][N - 1] + y_2[N - 2] + y_2[0])
 
-x_2 = misc.solveTriMatrix(matrix_B, column_G)
-
-x_N_1 = (misc.f(1) * math.pow(h, 2) - x_1[0] - x_1[N-2])/(matrix[N-1][N-1] + x_2[N-2] + x_2[0])
-
-print(x_N_1)
-
-my_pre_solution = [N-1] * (N-1)
 for i in range(0, N - 1):
-    my_pre_solution[i] = x_1[i] + x_N_1 * x_2[i]
+    my_pre_solution[i] = y_1[i] + x_N_1 * y_2[i]
 
 my_solution = [0.0] * N
 
 for i in range(0, N - 1):
     my_solution[i] = my_pre_solution[i]
 
-my_solution[N-1] = x_N_1
+my_solution[N - 1] = x_N_1
 
-plt.plot(t_lol, x_1)
+plt.plot(t_lol, y_1)
+plt.title(r'$y^{(1)}$')
 plt.grid(True)
 plt.minorticks_on()
 plt.grid(which='minor', linestyle=':')
 plt.show()
 
-plt.plot(t_lol, x_2)
+plt.plot(t_lol, y_2)
+plt.title(r'$y^{(2)}$')
 plt.grid(True)
 plt.minorticks_on()
 plt.grid(which='minor', linestyle=':')
 plt.show()
 
 plt.plot(t, my_solution)
+plt.title(r'$y$')
 plt.grid(True)
 plt.minorticks_on()
 plt.grid(which='minor', linestyle=':')
 plt.show()
 
 plt.plot(t, solution)
+plt.title("solution of numpy.linalg.solve")
 plt.grid(True)
 plt.minorticks_on()
 plt.grid(which='minor', linestyle=':')
