@@ -103,3 +103,20 @@ plt.grid(True)
 plt.minorticks_on()
 plt.grid(which='minor', linestyle=':')
 plt.show()
+
+full_view = [0.0] * (N * 5)
+t_full_view = [0.0] * (N * 5)
+
+for i in range(0, t_full_view.__len__()):
+    t_full_view[i] = i * h
+
+for i in range(0, 5):
+    for j in range(0, my_solution.__len__()):
+        full_view[j + i*N] = my_solution[j]
+
+plt.plot(t_full_view, full_view)
+plt.title("5 periods")
+plt.grid(True)
+plt.minorticks_on()
+plt.grid(which='minor', linestyle=':')
+plt.show()
